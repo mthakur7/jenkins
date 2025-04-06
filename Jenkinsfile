@@ -14,6 +14,7 @@ pipeline {
         docker { image 'node:16-alpine' }
       }
       steps {
+        sh 'echo "Hello World"'
         sh 'node --version'
       }
     }
