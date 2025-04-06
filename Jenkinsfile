@@ -1,22 +1,27 @@
 pipeline {
-  agent none
+  agent any
+   environment {
+    AWS_REGION = "us-east-1"
+  }
   stages {
-    stage('Back-end') {
-      agent {
-        docker { image 'maven:3.8.1-adoptopenjdk-11' }
-      }
+    stage('Terraform Init') {
+      
       steps {
-        sh 'mvn --version'
+        sh 'terraform init'
       }
     }
-    stage('Front-end') {
-      agent {
-        docker { image 'node:16-alpine' }
-      }
+    stage('Terraform Plan') {
+     
       steps {
         sh 'echo "Hello World"'
-        sh 'node --version'
+        sh 'terraform plan -out=tfplan'
       }
     }
+     stage('Terraform Apply') {
+      steps {
+        sh 'terraform apply -auto-approve tfplan'
+      }
+    }
+    
   }
 }
